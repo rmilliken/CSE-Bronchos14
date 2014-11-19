@@ -111,14 +111,13 @@ def get_action(player, history, opponent_history, score, opponent_score, getting
     # This example player always colludes
     if player == 0:
         if getting_team_name:
-            return "( ͡° ͜ʖ ͡°)"
+            return 'loyal'
         else:
-            if len(opponent_history) == 2 or len(opponent_history) == 6 or len(opponent_history) == 8:
-                return 'b' #Always betrays on 3rd, 7th, and 9th round
-            elif opponent_history[-1] == 'b' and opponent_history[-2] == 'b':
-                return 'b' #Betrays if accomplice betrays for 2 rounds in a row
-            elif opponent_score > 0:
-                return 'b'
+    # use history, opponent_history, score, opponent_score
+            # this uses the opponents history to compute a return
+            size = len(history)
+            if(size%3==0): #the number of rounds played is a multiple of 3
+                return 'c'
             else:
                 return 'b'
                           
@@ -128,12 +127,12 @@ def get_action(player, history, opponent_history, score, opponent_score, getting
     #This example player always betrays.      
     elif player == 1:
         if getting_team_name:
-            return 'loyal'
+            return 'betray every 5th round'
         else:
-    # use history, opponent_history, score, opponent_score
-            # this uses the opponents history to compute a return
+            # use history, opponent_history, score, opponent_score
+            # to compute your strategy
             size = len(history)
-            if(size%3==0): #the number of rounds played is a multiple of 3
+            if(size%5==0): #the number of rounds played is a multiple of 5
                 return 'c'
             else:
                 return 'b'
@@ -144,18 +143,16 @@ def get_action(player, history, opponent_history, score, opponent_score, getting
     #   
     #This example player is silent at first and then 
     #only betrays if they were a sucker last round.
-    #ANDRE AND CHANCE AND JUAN BOUT TO TAKE OVER !!
     elif player == 2:
         if getting_team_name:
             return 'loyal vengeful'
         else:
             if len(opponent_history)==0: #It's the first round: collude
-                return 'b'
-            elif len(opponent_history) > 0:
-                return 'b'
-                # betray if they were severely punished last time
+                return 'c'
+            elif history[-1]=='c' and opponent_history[-1]=='b':
+                return 'b' # betray if they were severely punished last time
             else:
-                return 'b' #otherwise collude
+                return 'c' #otherwise collude
 
 
     
@@ -205,17 +202,16 @@ def get_action(player, history, opponent_history, score, opponent_score, getting
     #
     elif player == 4:
         if getting_team_name:
-            return 'betray every other round'
+            return 'loyal vengeful'
         else:
             # use history, opponent_history, score, opponent_score
             # to compute your strategy
-            size = len(history)
-            if(history[-1]='b'):
+            if len(opponent_history)==3:
                 return 'c'
-            else:
+            elif history[-1]=='b' and opponent_history[-1]=='c':
                 return 'b'
-    
-    
+            else:
+                return 'c'
     
 
 
